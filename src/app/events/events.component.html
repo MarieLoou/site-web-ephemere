@@ -1,46 +1,42 @@
 <section id="events">
   <div class="container">
-  <section class="events-section">
-  <div class="section-header">
-    <div>
-      <div class="section-title">Évènements</div>
-      <div class="section-kicker">Nos derniers évènements</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div *ngIf="loading()">Chargement de la dernière photo…</div>
-    <div *ngIf="error()" class="error">{{ error() }}</div>
-
-    <ng-container *ngIf="!loading() && !error()">
-      <div *ngIf="lastPhoto() as photo; else noPhoto">
-        <figure class="photo-figure">
-          <img [src]="getPhotoUrl(photo)" [alt]="photo.title || 'Photo Flickr'" />
-          <figcaption>
-            <div class="photo-title">{{ photo.title || '(Sans titre)' }}</div>
-            <div class="photo-author">
-              par {{ photo.ownername || 'Ephemere - Collectif Photo' }}
-            </div>
-          </figcaption>
-        </figure>
-        <a
-          class="album-link"
-          href="https://www.flickr.com/photos/club-ephemere/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Voir toutes nos photos sur Flickr
-          <span>↗</span>
-        </a>
-      </div>
-      <ng-template #noPhoto>
-        <div class="empty">
-          Aucune photo disponible pour le moment sur notre compte Flickr.
+    <section class="events-section">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Évènements</div>
+          <div class="section-kicker">Nos derniers évènements</div>
         </div>
-      </ng-template>
-    </ng-container>
+      </div>
+
+      <div class="card">
+        <div *ngIf="loading()" class="loading">Chargement des photos…</div>
+        <div *ngIf="error()" class="error">{{ error() }}</div>
+
+        <ng-container *ngIf="!loading() && !error()">
+          <div *ngIf="photos().length > 0; else noPhoto" class="photos-grid">
+            <figure *ngFor="let photo of photos()" class="photo-figure">
+              <img [src]="getPhotoUrl(photo)" [alt]="photo.title || 'Photo Flickr'" />
+              <figcaption>
+                <div class="photo-title">{{ photo.title || '(Sans titre)' }}</div>
+                <div class="photo-author">
+                  par {{ photo.ownername || 'Ephemere - Collectif Photo' }}
+                </div>
+              </figcaption>
+            </figure>
+          </div>
+          
+          <div *ngIf="hasMorePages()" #loadingMoreElement class="loading-more">
+            <span *ngIf="loadingMore()">Chargement de plus de photos…</span>
+          </div>
+          
+          <ng-template #noPhoto>
+            <div class="empty">
+              Aucune photo trouvée.
+            </div>
+          </ng-template>
+        </ng-container>
+      </div>
+    </section>
   </div>
-</section>
-</div>
 </section>
 

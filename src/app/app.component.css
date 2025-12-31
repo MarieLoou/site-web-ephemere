@@ -48,3 +48,10 @@
   text-underline-offset: 3px;
 }
 
+app-header{
+  position: sticky;
+  top: 0;
+  background-color: var(--black-3);
+  z-index: 10;
+  border-bottom: solid 1px var(--black-7);
+}

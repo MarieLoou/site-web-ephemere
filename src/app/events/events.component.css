@@ -3,42 +3,84 @@
 }
 
 .error {
-  color: #fecaca;
+  color: var(--black-8);
   font-size: 0.9rem;
 }
 
 .empty {
   font-size: 0.9rem;
-  color: #9ca3af;
+  color: var(--black-8);
 }
 
-.last-photo-card {
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  padding: 1.1rem 1.1rem 1.4rem;
+.loading,
+.loading-more {
+  text-align: center;
+  padding: 2rem;
+  color: var(--black-8);
+  font-size: 0.9rem;
+}
+
+.photos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
 }
 
 .photo-figure {
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  transition: transform 0.2s ease-out;
+}
+
+.photo-figure:hover {
+  transform: translateY(-2px);
 }
 
 .photo-figure img {
   width: 100%;
-  max-height: 320px;
+  height: 280px;
   object-fit: cover;
-  border-radius: 12px;
+  display: block;
 }
 
 .photo-figure figcaption {
-  margin-top: 0.6rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
 }
 
 .photo-title {
   font-weight: 500;
+  font-size: 0.95rem;
 }
 
 .photo-author {
-  color: #9ca3af;
-  font-size: 0.9rem;
+  color: var(--black-8);
+  font-size: 0.85rem;
+}
+
+@media (max-width: 900px) {
+  .photos-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.25rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .photos-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .photo-figure img {
+    height: 240px;
+  }
 }
 
