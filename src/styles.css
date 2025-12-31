@@ -1,1 +1,170 @@
 /* You can add global styles to this file, and also import other style files */
+html {
+  scroll-behavior: smooth;
+}
+body{
+    margin: 0
+}
+:root{
+  --black-1: #000;
+  --black-2: #0b0b0b;
+  --black-3: #1d1d1d;
+  --black-4: #2d2d2d;
+  --black-5: #3d3d3d;
+  --black-6: #4d4d4d;
+  --black-7: #5d5d5d;
+  --black-8: #6d6d6d;
+  --black-9: #7d7d7d;
+  --black-10: #8d8d8d;
+
+
+
+  --pop-1: #fff;
+  --pop-2: #eee;
+
+  --card-bg: #191919d9;
+  --card-border: var(--black-4);
+
+  /* Border radiuses */
+  --rounded: 999px;
+
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:host {
+  display: block;
+  min-height: 100vh;
+  font-family: "Source Sans 3", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  background: radial-gradient(circle at top, var(--black-3) 0, var(--black-2) 42%, var(--black-1) 100%);
+  color: #f7f7f7;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.875rem;
+  border: none;
+  cursor: pointer;
+  border-radius: var(--rounded);
+  color: var(--black-1);
+  gap: 0.45rem;
+  padding: 0.3em 1em;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition:
+    transform 0.22s ease-out,
+    box-shadow 0.22s ease-out,
+    background 0.22s ease-out;
+}
+
+.btn.primary {
+  background: white;
+  color: var(--black-1);
+  
+
+}
+
+.btn.primary:hover {
+  transform: translateY(-1px);
+  background: var(--pop-2)
+}
+
+.btn.ghost {
+
+  background: radial-gradient(circle at top left, var(--black-1) 0, var(--black-2) 42%);
+  color: #f7f7f7;
+
+}
+
+.btn.ghost span {
+  font-size: 1.1rem;
+}
+
+.btn.ghost:hover {
+  border-color: rgba(255, 255, 255, 0.35);
+  background: radial-gradient(circle at top left, var(--black-1) 0, var(--black-2) 46%);
+  transform: translateY(-1px);
+}
+
+img {
+    max-width: 100%;
+    display: block;
+  }
+
+
+a {
+    color: inherit;
+    text-decoration: none;
+  }
+  
+  
+  .page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+
+  .container {
+    width: 100%;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+
+  section {
+    padding: 2.5rem 0;
+  }
+
+
+section .section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+section .section-title {
+  font-weight: 600;
+  font-size: 1.15rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--black-8);
+}
+
+
+section .section-kicker {
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+
+.container .card {
+  background: var(--card-bg);
+  border-radius: 18px;
+  border: 1px solid var(--card-border);
+  padding: 1.5rem 1.4rem;
+}
+
+@media (max-width: 720px) {
+  section {
+    padding: 2rem 0;
+  }
+
+  .container .card {
+    padding: 1.25rem 1.1rem;
+  }
+}
+

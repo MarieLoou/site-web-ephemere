@@ -1,0 +1,37 @@
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.team-card {
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  padding: 0.9rem 1rem;
+  font-size: 0.88rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.team-role {
+  font-weight: 600;
+}
+
+.team-empty {
+  color: #b2b7c2;
+  font-size: 0.8rem;
+}
+
+@media (max-width: 900px) {
+  .team-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+
+  .team-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

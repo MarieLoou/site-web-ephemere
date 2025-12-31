@@ -1,0 +1,234 @@
+.hero {
+  padding: 4rem 0 3rem;
+}
+
+.hero-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 2.75rem;
+  align-items: center;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.2rem 0.75rem;
+  border-radius: var(--rounded);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--pop-1);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  margin-bottom: 1rem;
+}
+
+.eyebrow-badge {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--rounded);
+  background: radial-gradient(circle at 30% 20%, #fff, #eee);
+  box-shadow: 0 0 0 4px rgba(255, 179, 0, 0.18);
+}
+
+.hero-title {
+  font-weight: 700;
+  font-size: clamp(2.3rem, 3vw, 2.9rem);
+  line-height: 1.1;
+  margin-bottom: 1rem;
+}
+
+.hero-title span {
+  background: linear-gradient(120deg, #fff8e1, #eee, #ddd);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero-lead {
+  color: #b2b7c2;
+  max-width: 34rem;
+  margin-bottom: 1.75rem;
+  font-size: 1rem;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  margin-bottom: 1.75rem;
+}
+
+
+.hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  font-size: 0.8rem;
+  color: #b2b7c2;
+}
+
+.hero-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.hero-meta-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--rounded);
+  background: #4ade80;
+  box-shadow: 0 0 0 4px rgba(74, 222, 128, 0.12);
+}
+
+.hero-visual {
+  position: relative;
+  min-height: 260px;
+}
+
+.glass-card {
+  position: relative;
+  border-radius: 26px;
+  padding: 1.2rem 1.2rem 1.4rem;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  box-shadow: 0 28px 60px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+}
+
+.glass-grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.18;
+  background-size: 28px 28px;
+  mask-image: radial-gradient(circle at top, #fff 0, #000 55%, transparent 75%);
+  pointer-events: none;
+}
+
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: var(--rounded);
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #b2b7c2;
+  margin-bottom: 0.9rem;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-tag-badge {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--rounded);
+  background: radial-gradient(circle at 30% 20%, #fff, white);
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.18);
+}
+
+.hero-photo-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1.1fr;
+  gap: 0.6rem;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-shot-large,
+.hero-shot-small {
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.hero-shot-large {
+  padding-top: 60%;
+  background-image:
+    linear-gradient(to bottom, rgba(15, 23, 42, 0.1), rgba(15, 23, 42, 0.7)),
+    url("https://images.pexels.com/photos/416160/pexels-photo-416160.jpeg?auto=compress&cs=tinysrgb&w=1200");
+}
+
+.hero-shot-small {
+  padding-top: 80%;
+  background-image:
+    linear-gradient(to bottom, rgba(15, 23, 42, 0.25), rgba(15, 23, 42, 0.9)),
+    url("https://images.pexels.com/photos/167832/pexels-photo-167832.jpeg?auto=compress&cs=tinysrgb&w=1200");
+}
+
+.hero-badge-floating {
+  position: absolute;
+  right: 1.3rem;
+  bottom: 1.4rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: 16px;
+  background: rgba(15, 23, 42, 0.88);
+  border: 1px solid rgba(148, 163, 184, 0.55);
+  backdrop-filter: blur(14px);
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 160px;
+}
+
+.hero-badge-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: #b2b7c2;
+}
+
+.hero-badge-value {
+  font-size: 0.98rem;
+  font-weight: 600;
+}
+
+.hero-badge-meta {
+  margin-top: 0.2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.7rem;
+  color: #b2b7c2;
+}
+
+.hero-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--rounded);
+  background: #22c55e;
+}
+
+.halo {
+  position: absolute;
+  inset: -40%;
+  background: radial-gradient(
+    circle at 10% 0,
+    rgba(255, 255, 255, 0.08),
+    transparent 42%
+  );
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+@media (max-width: 900px) {
+  .hero-inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2.25rem;
+  }
+
+  .hero-visual {
+    order: -1;
+  }
+}
+
+@media (max-width: 720px) {
+  .hero {
+    padding-top: 3rem;
+  }
+}
