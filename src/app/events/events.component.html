@@ -43,6 +43,31 @@
             class="filter-input"
           />
         </div>
+
+        <div class="filter-group">
+          <label for="album-select">Album</label>
+          <div class="album-select-wrapper">
+            <input 
+              id="album-search"
+              type="text" 
+              [(ngModel)]="albumSearchTerm"
+              placeholder="Rechercher un album..."
+              class="filter-input album-search-input"
+            />
+            <select 
+              id="album-select"
+              [(ngModel)]="albumId"
+              (ngModelChange)="onFiltersChange(); albumSearchTerm = ''"
+              class="filter-input album-select"
+            >
+              <option value="">Tous les albums</option>
+              <option *ngFor="let album of getFilteredAlbums()" [value]="album.id">
+                {{ album.title._content }}
+              </option>
+            </select>
+            <div *ngIf="albumsLoading()" class="album-loading">Chargement des albums...</div>
+          </div>
+        </div>
       </aside>
 
       <div class="events-section">

@@ -93,6 +93,25 @@
   color: var(--black-8);
 }
 
+.album-select-wrapper {
+  position: relative;
+}
+
+.album-search-input {
+  margin-bottom: 0.5rem;
+}
+
+.album-select {
+  width: 100%;
+}
+
+.album-loading {
+  font-size: 0.85rem;
+  color: var(--black-8);
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
 .error {
   color: var(--black-8);
   font-size: 0.9rem;

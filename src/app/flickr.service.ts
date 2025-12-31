@@ -22,6 +22,38 @@ export interface FlickrSearchOptions {
   page?: number;
 }
 
+export interface FlickrPhotoset {
+  id: string;
+  owner: string;
+  username: string;
+  primary: string;
+  secret: string;
+  server: string;
+  farm: number;
+  count_views: string;
+  count_comments: string;
+  count_photos: string;
+  count_videos: string;
+  title: {
+    _content: string;
+  };
+  description: {
+    _content: string;
+  };
+  date_create: string;
+  date_update: string;
+}
+
+export interface FlickrPhotosetsResponse {
+  photosets: {
+    page: number;
+    pages: number;
+    perpage: number;
+    total: string;
+    photoset: FlickrPhotoset[];
+  };
+}
+
 export interface FlickrPhoto {
   id: string;
   owner: string;
@@ -110,6 +142,43 @@ export class FlickrService {
     }
 
     return this.http.get<FlickrSearchResponse>(FLICKR_API_URL, { params });
+  }
+
+  getPhotosetPhotos(photosetId: string, userId: string, page: number = 1, perPage: number = 20): Observable<FlickrSearchResponse> {
+    const params = new HttpParams()
+      .set('method', 'flickr.photosets.getPhotos')
+      .set('api_key', FLICKR_API_KEY)
+      .set('format', 'json')
+      .set('nojsoncallback', '1')
+      .set('photoset_id', photosetId)
+      .set('user_id', userId)
+      .set('extras', 'owner_name,date_taken,date_upload,geo,tags')
+      .set('per_page', String(perPage))
+      .set('page', String(page));
+
+    return this.http.get<FlickrSearchResponse>(FLICKR_API_URL, { params }).pipe(
+      map((res: any) => ({
+        photos: {
+          page: res.photoset.page,
+          pages: res.photoset.pages,
+          perpage: res.photoset.perpage,
+          total: res.photoset.total,
+          photo: res.photoset.photo || []
+        }
+      }))
+    );
+  }
+
+  getPhotosets(userId: string): Observable<FlickrPhotosetsResponse> {
+    const params = new HttpParams()
+      .set('method', 'flickr.photosets.getList')
+      .set('api_key', FLICKR_API_KEY)
+      .set('format', 'json')
+      .set('nojsoncallback', '1')
+      .set('user_id', userId)
+      .set('per_page', '500');
+
+    return this.http.get<FlickrPhotosetsResponse>(FLICKR_API_URL, { params });
   }
 
   getPhotoInfo(photoId: string, secret: string): Observable<any> {

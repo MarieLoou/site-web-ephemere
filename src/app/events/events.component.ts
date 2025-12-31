@@ -2,13 +2,14 @@ import { CommonModule } from '@angular/common';
 import { Component, PLATFORM_ID, inject, signal, OnInit, OnDestroy, HostListener, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { isPlatformBrowser } from '@angular/common';
-import { FlickrPhoto, FlickrSearchOptions, FlickrService } from '../flickr.service';
+import { FlickrPhoto, FlickrSearchOptions, FlickrService, FlickrPhotoset } from '../flickr.service';
 import { environment } from "../../environments/environment.local";
 
 interface Filters {
   photographerName: string;
   minDate: string;
   maxDate: string;
+  albumId: string;
 }
 
 @Component({
@@ -33,23 +34,68 @@ export class EventsComponent implements OnInit, OnDestroy, AfterViewInit {
   hasMorePages = signal<boolean>(true);
   totalPages = signal<number>(0);
 
+  // Albums
+  albums = signal<FlickrPhotoset[]>([]);
+  albumsLoading = signal<boolean>(false);
+  albumSearchTerm = '';
+
   // Filter properties for two-way binding
   photographerName = '';
   minDate = '';
   maxDate = '';
+  albumId = '';
 
   getFilters(): Filters {
     return {
       photographerName: this.photographerName,
       minDate: this.minDate,
       maxDate: this.maxDate,
+      albumId: this.albumId,
     };
   }
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
+      this.loadAlbums();
       this.loadPhotos(1);
     }
+  }
+
+  loadAlbums(): void {
+    this.albumsLoading.set(true);
+    this.flickr.getPhotosets(environment.EPHEMERE_ACCOUNT_ID).subscribe({
+      next: (res) => {
+        this.albums.set(res.photosets?.photoset || []);
+        this.albumsLoading.set(false);
+      },
+      error: (err) => {
+        console.error('Erreur lors de la récupération des albums Flickr', err);
+        this.albumsLoading.set(false);
+      },
+    });
+  }
+
+  getFilteredAlbums(): FlickrPhotoset[] {
+    const allAlbums = this.albums();
+    
+    if (!this.albumSearchTerm.trim()) {
+      return allAlbums;
+    }
+    
+    const searchTerm = this.albumSearchTerm.toLowerCase();
+    const filtered = allAlbums.filter(album => 
+      album.title._content.toLowerCase().includes(searchTerm)
+    );
+    
+    // Always include the selected album even if it doesn't match the search
+    if (this.albumId) {
+      const selectedAlbum = allAlbums.find(album => album.id === this.albumId);
+      if (selectedAlbum && !filtered.find(a => a.id === selectedAlbum.id)) {
+        filtered.unshift(selectedAlbum);
+      }
+    }
+    
+    return filtered;
   }
 
   onFiltersChange(): void {
@@ -75,12 +121,14 @@ export class EventsComponent implements OnInit, OnDestroy, AfterViewInit {
     this.photographerName = '';
     this.minDate = '';
     this.maxDate = '';
+    this.albumId = '';
+    this.albumSearchTerm = '';
     this.filteredPhotos.set([]);
     this.onFiltersChange();
   }
 
   hasActiveFilters(): boolean {
-    return !!(this.photographerName.trim() || this.minDate || this.maxDate);
+    return !!(this.photographerName.trim() || this.minDate || this.maxDate || this.albumId);
   }
 
   ngOnDestroy(): void {
@@ -134,6 +182,30 @@ export class EventsComponent implements OnInit, OnDestroy, AfterViewInit {
     this.error.set(null);
 
     const currentFilters = this.getFilters();
+
+    // If album is selected, use photoset API, otherwise use search API
+    if (currentFilters.albumId) {
+      this.flickr.getPhotosetPhotos(
+        currentFilters.albumId,
+        environment.EPHEMERE_ACCOUNT_ID,
+        page,
+        20
+      ).subscribe({
+        next: (res) => {
+          console.log(res);
+          this.handlePhotosResponse(res, append, currentFilters);
+        },
+        error: (err) => {
+          console.error('Erreur lors de la récupération des photos Flickr', err);
+          this.error.set('Impossible de récupérer les photos depuis Flickr. Merci de réessayer plus tard.');
+          this.loading.set(false);
+          this.loadingMore.set(false);
+        },
+      });
+      return;
+    }
+
+    // Regular search API
     const options: FlickrSearchOptions = {
       userId: environment.EPHEMERE_ACCOUNT_ID,
       sort: 'date-posted-desc',
@@ -161,23 +233,7 @@ export class EventsComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.flickr.searchPhotos(options).subscribe({
       next: (res) => {
-        const newPhotos = res.photos?.photo ?? [];
-        
-        if (append) {
-          this.photos.update(prev => [...prev, ...newPhotos]);
-        } else {
-          this.photos.set(newPhotos);
-        }
-
-        // Apply filters to all loaded photos (handles both server-side and client-side filtering)
-        this.applyFilters();
-
-        this.currentPage.set(res.photos.page);
-        this.totalPages.set(res.photos.pages);
-        this.hasMorePages.set(res.photos.page < res.photos.pages);
-        
-        this.loading.set(false);
-        this.loadingMore.set(false);
+        this.handlePhotosResponse(res, append, currentFilters);
       },
       error: (err) => {
         console.error('Erreur lors de la récupération des photos Flickr', err);
@@ -186,6 +242,26 @@ export class EventsComponent implements OnInit, OnDestroy, AfterViewInit {
         this.loadingMore.set(false);
       },
     });
+  }
+
+  private handlePhotosResponse(res: any, append: boolean, currentFilters: Filters): void {
+    const newPhotos = res.photos?.photo ?? [];
+    
+    if (append) {
+      this.photos.update(prev => [...prev, ...newPhotos]);
+    } else {
+      this.photos.set(newPhotos);
+    }
+
+    // Apply filters to all loaded photos (handles both server-side and client-side filtering)
+    this.applyFilters();
+
+    this.currentPage.set(res.photos?.page);
+    this.totalPages.set(res.photos?.pages);
+    this.hasMorePages.set(res?.photos? res.photos.page < res.photos.pages : false);
+    
+    this.loading.set(false);
+    this.loadingMore.set(false);
   }
 
   private filterByDateTaken(photos: FlickrPhoto[], filters: Filters): FlickrPhoto[] {
@@ -244,12 +320,14 @@ export class EventsComponent implements OnInit, OnDestroy, AfterViewInit {
       filtered = this.filterByPhotographerName(filtered, currentFilters.photographerName.trim());
     }
 
+    // Note: Album filtering is done server-side via getPhotosetPhotos, so no client-side filtering needed
+
     this.filteredPhotos.set(filtered);
   }
 
   private loadMorePhotos(): void {
     if (this.hasMorePages() && !this.loadingMore()) {
-      const nextPage = this.currentPage() + 1;
+      const nextPage = Number(this.currentPage()) + 1;
       this.loadPhotos(nextPage, true);
     }
   }
